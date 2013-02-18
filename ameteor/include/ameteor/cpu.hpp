@@ -31,11 +31,13 @@ namespace AMeteor
 				uint32_t dw;
 				struct
 				{
-					unsigned int mode     :  5;
+					unsigned char mode     :  5;
 					bool thumb			      :  1;
 					bool fiq_d            :  1;
 					bool irq_d            :  1;
-					unsigned int reserved : 19;
+					unsigned char        : 8;
+					unsigned char        : 8;
+					unsigned char        : 3;
 					bool s_overflow       :  1;
 					bool f_overflow       :  1;
 					bool f_carry          :  1;
