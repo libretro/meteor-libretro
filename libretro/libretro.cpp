@@ -72,9 +72,10 @@ void retro_init(void) {}
 void retro_reset(void) { AMeteor::Reset(AMeteor::UNIT_ALL ^ AMeteor::UNIT_MEMORY_BIOS); }
 void retro_deinit(void) { retro_reset(); }
 
-static void init_first_run()
+static bool first_run;
+static void first_run_load()
 {
-	static bool first_run = true;
+	// Have to defer ROM loading as SRAM content is used to determine cart type. GBA stuff ...
 	if (first_run)
 	{
 		AMeteor::_memory.LoadCartInferred();
@@ -87,14 +88,14 @@ static void init_first_run()
 
 void retro_run(void)
 {
-	init_first_run();
+	first_run_load();
 	pretro_poll();
 	AMeteor::Run(10000000); // We emulate until VBlank.
 }
 
 size_t retro_serialize_size(void)
 {
-	init_first_run();
+	first_run_load();
 	std::ostringstream stream;
 	AMeteor::SaveState(stream);
 	unsigned serialize_size = stream.str().size();
@@ -139,8 +140,10 @@ void retro_cheat_set(unsigned, bool, const char *) {}
 bool retro_load_game(const struct retro_game_info *info)
 {
 	AMeteor::_memory.LoadRom((const uint8_t*)info->data, info->size);
-   enum retro_pixel_format fmt = RETRO_PIXEL_FORMAT_RGB565;
-   retro_rgb565 = pretro_environment(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &fmt);
+	enum retro_pixel_format fmt = RETRO_PIXEL_FORMAT_RGB565;
+	retro_rgb565 = pretro_environment(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &fmt);
+	first_run = true;
+
 	return true;
 }
 

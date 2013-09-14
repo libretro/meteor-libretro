@@ -263,7 +263,7 @@ namespace AMeteor
 		SetCartTypeFromSize(size);
 		std::istringstream ss;
 		ss.str(std::string((char*)CartMemData, CartMem::MAX_SIZE));
-		if (!m_cart->Load(ss))
+		if (m_cart->Load(ss) != CERR_NO_ERROR)
 			return false;
 		return true;
 	}
