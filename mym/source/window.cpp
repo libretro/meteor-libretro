@@ -75,9 +75,17 @@ namespace mym
 		Uninit();
 
 		if (display)
+#if SFML_VERSION_MAJOR < 2
 			m_window.Create (display);
+#else
+			m_window.create (display);
+#endif
 		else
+#if SFML_VERSION_MAJOR < 2
 			m_window.Create (sf::VideoMode(4*240, 4*160, 32), "Meteor");
+#else
+			m_window.create (sf::VideoMode(4*240, 4*160, 32), "Meteor");
+#endif
 
 		InitGl();
 		StartThread();
@@ -98,7 +106,11 @@ namespace mym
 			0, 1,
 		};
 
+#if SFML_VERSION_MAJOR < 2
 		m_window.SetActive();
+#else
+		m_window.setActive();
+#endif
 
 		// TODO check (may be called multiple times)
 		if (GLEW_OK != glewInit())
@@ -129,8 +141,13 @@ namespace mym
 		glBufferData(GL_PIXEL_UNPACK_BUFFER, 4*240*4*160*4, NULL,
 				GL_DYNAMIC_DRAW);
 
+#if SFML_VERSION_MAJOR < 2
 		m_window.Display();
 		m_window.SetActive(false);
+#else
+		m_window.display();
+		m_window.setActive(false);
+#endif
 	}
 
 	void Window::StartThread()
@@ -160,13 +177,21 @@ namespace mym
 
 	void Window::UninitGl()
 	{
+#if SFML_VERSION_MAJOR < 2
 		if (m_window.SetActive())
+#else
+		if (m_window.setActive())
+#endif
 		{
 			glDeleteBuffers(1, &m_pbo);
 			glDeleteTextures(1, &m_texture);
 			glDeleteBuffers(1, &m_vbo);
 			m_vbo = m_texture = m_pbo = 0;
+#if SFML_VERSION_MAJOR < 2
 			m_window.Close();
+#else
+			m_window.close();
+#endif
 		}
 	}
 
@@ -195,7 +220,11 @@ namespace mym
 			sched_setaffinity(syscall(__NR_gettid), sizeof(set), &set);
 		}
 
+#if SFML_VERSION_MAJOR < 2
 		if (!m_window.SetActive())
+#else
+		if (!m_window.setActive())
+#endif
 			puts("Can't activate window !");
 
 		glViewport(0, 0, 240*4, 160*4);
@@ -227,13 +256,21 @@ namespace mym
 
 			glDrawArrays(GL_QUADS, 0, 4);
 
+#if SFML_VERSION_MAJOR < 2
 			m_window.Display();
+#else
+			m_window.display();
+#endif
 		}
 
 		glDisableClientState(GL_VERTEX_ARRAY);
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
+#if SFML_VERSION_MAJOR < 2
 		m_window.SetActive(false);
+#else
+		m_window.setActive(false);
+#endif
 		pthread_mutex_unlock(&m_mutex);
 	}
 }
