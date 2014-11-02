@@ -28,7 +28,7 @@ else
    CXXFLAGS += -DNO_MEMMEM
 endif
 
-CXXFLAGS += -Wall -pedantic -I. -I../ameteor/include -pipe -D__LIBRETRO__ -Wno-parentheses -fno-exceptions -fno-rtti
+CXXFLAGS += -Wall -pedantic -pipe -D__LIBRETRO__ -Wno-parentheses -fno-exceptions -fno-rtti
 
 ifeq ($(DEBUG), 1)
    CFLAGS += -O0 -g
@@ -38,57 +38,17 @@ else
    CXXFLAGS += -O3
 endif
 
-SRCDIR := ../ameteor/source
+CORE_DIR := ..
 
-SOURCES := \
-	$(SRCDIR)/audio/dsound.cpp \
-	$(SRCDIR)/audio/sound1.cpp \
-	$(SRCDIR)/audio/sound2.cpp \
-	$(SRCDIR)/audio/sound4.cpp \
-	$(SRCDIR)/audio/speaker.cpp \
-	$(SRCDIR)/disassembler/argimmediate.cpp \
-	$(SRCDIR)/disassembler/argmulregisters.cpp \
-	$(SRCDIR)/disassembler/argpsr.cpp \
-	$(SRCDIR)/disassembler/argregister.cpp \
-	$(SRCDIR)/disassembler/argrelative.cpp \
-	$(SRCDIR)/disassembler/argshift.cpp \
-	$(SRCDIR)/disassembler/arguimmediate.cpp \
-	$(SRCDIR)/disassembler/arguments.cpp \
-	$(SRCDIR)/disassembler/instruction.cpp \
-	$(SRCDIR)/graphics/bglayer.cpp \
-	$(SRCDIR)/graphics/object.cpp \
-	$(SRCDIR)/graphics/objects.cpp \
-	$(SRCDIR)/graphics/renderer.cpp \
-	$(SRCDIR)/graphics/screen.cpp \
-	$(SRCDIR)/ameteor.cpp \
-	$(SRCDIR)/bios.cpp \
-	$(SRCDIR)/clock.cpp \
-	$(SRCDIR)/cpu.cpp \
-	$(SRCDIR)/debug.cpp \
-	$(SRCDIR)/dma.cpp \
-	$(SRCDIR)/eeprom.cpp \
-	$(SRCDIR)/flash.cpp \
-	$(SRCDIR)/cartmem.cpp \
-	$(SRCDIR)/interpreter.cpp \
-	$(SRCDIR)/interpreter_arm.cpp \
-	$(SRCDIR)/interpreter_thumb.cpp \
-	$(SRCDIR)/io.cpp \
-	$(SRCDIR)/keypad.cpp \
-	$(SRCDIR)/lcd.cpp \
-	$(SRCDIR)/memory.cpp \
-	$(SRCDIR)/sound.cpp \
-	$(SRCDIR)/sram.cpp \
-	$(SRCDIR)/timer.cpp \
-	video.cpp \
-	audio.cpp \
-	input.cpp \
-	libretro.cpp
+include Makefile.common
 
-OBJ := $(SOURCES:.cpp=.o)
+CXXFLAGS += $(INCFLAGS)
+
+OBJECTS := $(SOURCES_CXX:.cpp=.o)
 
 all: $(TARGET)
 
-$(TARGET): $(OBJ)
+$(TARGET): $(OBJECTS)
 	@$(CXX) -o $@ $^ $(SHARED) $(LDFLAGS) $(LIBS)
 	@echo LD $(notdir $@)
 
@@ -98,7 +58,7 @@ $(TARGET): $(OBJ)
 
 clean:
 	rm -f $(TARGET)
-	rm -f $(OBJ)
+	rm -f $(OBJECTS)
 
 .PHONY: clean
 
