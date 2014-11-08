@@ -55,6 +55,7 @@ ifeq ($(arch),ppc)
    PLATFORM_DEFINES := -D__POWERPC__ -D__ppc__
 else
    ENDIANNESS_DEFINES = -DLSB_FIRST
+	NO_MEMMEM = 1
 endif
    OSXVER = `sw_vers -productVersion | cut -d. -f 2`
    OSX_LT_MAVERICKS = `(( $(OSXVER) <= 9)) && echo "YES"`
@@ -179,6 +180,7 @@ else
    CXX = g++
    SHARED := -shared -static-libgcc -static-libstdc++ -Wl,-no-undefined -Wl,-version-script=$(LIBRETRO_DIR)/link.T
    ENDIANNESS_DEFINES = -DLSB_FIRST
+	NO_MEMMEM = 1
 endif
 
 ifeq ($(DEBUG), 1)
@@ -212,6 +214,11 @@ CXXFLAGS += $(fpic) $(DEFINES)
 ifeq ($(FRONTEND_SUPPORTS_RGB565), 1)
 CFLAGS += -DFRONTEND_SUPPORTS_RGB565
 CXXFLAGS += -DFRONTEND_SUPPORTS_RGB565
+endif
+
+ifeq ($(NO_MEMMEM), 1)
+CFLAGS += -DNO_MEMMEM
+CXXFLAGS += -DNO_MEMMEM
 endif
 
 LIBS :=

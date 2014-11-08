@@ -28,7 +28,7 @@ SOURCES_CXX := \
 	$(SRCDIR)/io.cpp \
 	$(SRCDIR)/keypad.cpp \
 	$(SRCDIR)/lcd.cpp \
-	$(SRCDIR)/memory.cpp \
+	$(SRCDIR)/meteor_memory.cpp \
 	$(SRCDIR)/sound.cpp \
 	$(SRCDIR)/sram.cpp \
 	$(SRCDIR)/timer.cpp \
