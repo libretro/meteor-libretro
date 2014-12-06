@@ -154,7 +154,7 @@ bool retro_load_game(const struct retro_game_info *info)
       { 0 },
    };
 
-   environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
+   pretro_environment(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
 
 	AMeteor::_memory.LoadRom((const uint8_t*)info->data, info->size);
 	enum retro_pixel_format fmt = RETRO_PIXEL_FORMAT_RGB565;
