@@ -83,6 +83,17 @@ ifeq ($(OSX_LT_MAVERICKS),"YES")
    CFLAGS += -miphoneos-version-min=5.0
 endif
    ENDIANNESS_DEFINES = -DLSB_FIRST
+else ifeq ($(platform), theos_ios)
+DEPLOYMENT_IOSVERSION = 5.0
+TARGET = iphone:latest:$(DEPLOYMENT_IOSVERSION)
+ARCHS = armv7 armv7s
+TARGET_IPHONEOS_DEPLOYMENT_VERSION=$(DEPLOYMENT_IOSVERSION)
+THEOS_BUILD_DIR := objs
+include $(THEOS)/makefiles/common.mk
+
+LIBRARY_NAME = $(TARGET_NAME)_libretro_ios
+   ENDIANNESS_DEFINES = -DLSB_FIRST
+
 else ifeq ($(platform), qnx)
    TARGET := $(TARGET_NAME)_libretro_qnx.so
    fpic := -fPIC
@@ -187,11 +198,11 @@ ifeq ($(DEBUG), 1)
 	CFLAGS += -O0 -g
 	CXXFLAGS += -O0 -g
 else ifeq ($(platform), emscripten)
-	CFLAGS += -O2
-	CXXFLAGS += -O2
+	CFLAGS += -O2 -DNDEBUG
+	CXXFLAGS += -O2 -DNDEBUG
 else
-	CFLAGS += -O3
-	CXXFLAGS += -O3
+	CFLAGS += -O3 -DNDEBUG
+	CXXFLAGS += -O3 -DNDEBUG
 endif
 
 include Makefile.common
@@ -202,11 +213,7 @@ OBJECTS := $(SOURCES_CXX:.cpp=.o)
 
 DEFINES += -D__LIBRETRO__ $(ENDIANNESS_DEFINES) $(PLATFORM_DEFINES) -DINLINE=inline
 
-ifeq ($(platform), sncps3)
 CODE_DEFINES =
-else
-CODE_DEFINES = -std=gnu99
-endif
 
 CFLAGS += $(CODE_DEFINES) $(fpic) $(DEFINES)
 CXXFLAGS += $(fpic) $(DEFINES)
@@ -223,8 +230,20 @@ endif
 
 LIBS :=
 
-all: $(TARGET)
+%.o: %.cpp
+	$(CXX) -c -o $@ $< $(CXXFLAGS) $(INCFLAGS)
 
+%.o: %.c
+	$(CC) -c -o $@ $< $(CFLAGS) $(INCFLAGS)
+
+ifeq ($(platform), theos_ios)
+COMMON_FLAGS := -DIOS $(COMMON_DEFINES) $(INCFLAGS) -I$(THEOS_INCLUDE_PATH) -Wno-error
+$(LIBRARY_NAME)_CFLAGS += $(CFLAGS) $(COMMON_FLAGS)
+$(LIBRARY_NAME)_CXXFLAGS += $(CXXFLAGS) $(COMMON_FLAGS)
+${LIBRARY_NAME}_FILES = $(SOURCES_CXX) $(SOURCES_C)
+include $(THEOS_MAKE_PATH)/library.mk
+else
+all: $(TARGET)
 $(TARGET): $(OBJECTS)
 ifeq ($(STATIC_LINKING), 1)
 	$(AR) rcs $@ $(OBJECTS)
@@ -232,11 +251,6 @@ else
 	$(CXX) -o $@ $(SHARED) $(OBJECTS) $(LDFLAGS) $(LIBS)
 endif
 
-%.o: %.cpp
-	$(CXX) -c -o $@ $< $(CXXFLAGS) $(INCFLAGS)
-
-%.o: %.c
-	$(CC) -c -o $@ $< $(CFLAGS) $(INCFLAGS)
 
 clean-objs:
 	rm -f $(OBJECTS)
@@ -246,4 +260,4 @@ clean:
 	rm -f $(TARGET)
 
 .PHONY: clean clean-objs
-
+endif
