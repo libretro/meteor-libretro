@@ -23,6 +23,7 @@
 #include "debug.hpp"
 
 #include <cmath>
+#include <math.h>
 
 namespace AMeteor
 {
