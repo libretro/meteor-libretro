@@ -117,6 +117,8 @@ else ifeq ($(platform), sncps3)
    ENDIANNESS_DEFINES = -DBLARGG_BIG_ENDIAN=1 -DWORDS_BIGENDIAN
    PLATFORM_DEFINES := -D__CELLOS_LV2__ -D__POWERPC__ -D__ppc__ -DUSE_CACHE_PREFETCH -DBRANCHLESS_GBA_GFX
    STATIC_LINKING = 1
+
+# PSP
 else ifeq ($(platform), psp1)
 	TARGET := $(TARGET_NAME)_libretro_psp1.a
 	CC = psp-gcc$(EXE_EXT)
@@ -126,6 +128,16 @@ else ifeq ($(platform), psp1)
 	PLATFORM_DEFINES := -DBRANCHLESS_GBA_GFX -DPSP 
 	CFLAGS += -G0
 	CXXFLAGS += -G0
+   STATIC_LINKING = 1
+
+# Vita
+else ifeq ($(platform), vita)
+	TARGET := $(TARGET_NAME)_libretro_vita.a
+	CC = arm-vita-eabi-gcc$(EXE_EXT)
+	CXX = arm-vita-eabi-g++$(EXE_EXT)
+	AR = arm-vita-eabi-ar$(EXE_EXT)
+	ENDIANNESS_DEFINES = -DLSB_FIRST
+	PLATFORM_DEFINES := -DBRANCHLESS_GBA_GFX -DVITA
    STATIC_LINKING = 1
 else ifeq ($(platform), psl1ght)
    TARGET := $(TARGET_NAME)_libretro_psl1ght.a
