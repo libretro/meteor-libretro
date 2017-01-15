@@ -29,7 +29,7 @@ include $(LIBRETRO_DIR)/Makefile.common
 
 LOCAL_MODULE    := libretro
 LOCAL_SRC_FILES = $(SOURCES_CXX)
-LOCAL_CXXFLAGS = -DINLINE=inline -DLSB_FIRST -D__LIBRETRO__ -DFRONTEND_SUPPORTS_RGB565 -I$(CORE_DIR)/ameteor/include
+LOCAL_CXXFLAGS += -DINLINE=inline -DLSB_FIRST -D__LIBRETRO__ -DFRONTEND_SUPPORTS_RGB565 -I$(CORE_DIR)/ameteor/include
 LOCAL_C_INCLUDES += external/stlport/stlport bionic $(CORE_DIR)/ameteor/include
 
 # https://code.google.com/p/android-ndk-profiler/
