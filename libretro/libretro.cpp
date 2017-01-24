@@ -157,6 +157,9 @@ bool retro_load_game(const struct retro_game_info *info)
       { 0 },
    };
 
+   if (!info)
+      return false;
+
    pretro_environment(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
 
 	AMeteor::_memory.LoadRom((const uint8_t*)info->data, info->size);
