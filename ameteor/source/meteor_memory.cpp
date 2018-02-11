@@ -32,6 +32,10 @@
 #include <fcntl.h>
 #include <cerrno>
 
+#if defined(__HAIKU__)
+#define NO_MEMMEM 1
+#endif
+
 #define RET_ADD(mem, low, high, size) \
 	if (add >= low && (add+size) <= high) \
 	{ \
