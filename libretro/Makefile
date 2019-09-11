@@ -93,6 +93,18 @@ else
    CFLAGS += -miphoneos-version-min=5.0
 endif
    ENDIANNESS_DEFINES = -DLSB_FIRST
+
+else ifeq ($(platform), tvos-arm64)
+   TARGET := $(TARGET_NAME)_libretro_tvos.dylib
+   fpic := -fPIC
+   SHARED := -dynamiclib
+   CFLAGS := -DIOS
+   ENDIANNESS_DEFINES = -DLSB_FIRST
+
+ifeq ($(IOSSDK),)
+   IOSSDK := $(shell xcodebuild -version -sdk appletvos Path)
+endif
+
 else ifeq ($(platform), theos_ios)
 DEPLOYMENT_IOSVERSION = 5.0
 TARGET = iphone:latest:$(DEPLOYMENT_IOSVERSION)
