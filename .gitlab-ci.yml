@@ -27,7 +27,7 @@ libretro-build-linux-x64:
     - .libretro-linux-x64-make-default
   variables:
     MAKEFILE_PATH: libretro
-    MAKEFILE: Makefile.libretro
+    MAKEFILE: Makefile
 
 libretro-build-windows-x64:
   extends:
@@ -35,7 +35,7 @@ libretro-build-windows-x64:
     - .libretro-windows-x64-mingw-make-default
   variables:
     MAKEFILE_PATH: libretro
-    MAKEFILE: Makefile.libretro
+    MAKEFILE: Makefile
     
 # Android
 android-armeabi-v7a:
@@ -65,4 +65,4 @@ libretro-build-vita:
     - .libretro-vita-static-retroarch-master
   variables:
     MAKEFILE_PATH: libretro
-    MAKEFILE: Makefile.libretro
+    MAKEFILE: Makefile
